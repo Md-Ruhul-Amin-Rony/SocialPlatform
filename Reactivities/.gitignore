@@ -12,3 +12,4 @@ obj/
 
 # Ignore other files
 *.log
+appsettings.json
