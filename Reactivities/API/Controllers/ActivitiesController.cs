@@ -1,6 +1,7 @@
 ﻿using Application.Activities;
 using Domain;
 using MediatR;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
@@ -28,15 +29,15 @@ namespace API.Controllers
 
         [HttpGet] //api/activities
 
-        public async Task<IActionResult> GetActivities()
+        public async Task<ActionResult<List<Activity>>> GetActivities()
         {
            
             return HandleResult(await Mediator.Send(new List.Query()));
         }
-
+        
         [HttpGet("{id}")] //api/activities/fdfkdff
 
-        public async Task<IActionResult> GetActivity(Guid id)
+        public async Task<ActionResult<Activity>> GetActivity(Guid id)
         {
             //return await _context.Activities.FindAsync(id);
             
