@@ -9,27 +9,14 @@ using Persistence;
 
 namespace API.Controllers
 {
-    //[Route("api/[controller]")]
-    //[ApiController]
+   
     public class ActivitiesController : BaseApiController
     {
-        //private readonly IMediator _mediator;
-
-        //private readonly DataContext _context;
-
-        //public ActivitiesController(DataContext context)
-        //{
-        //    _context = context;
-        //}
-
-        //public ActivitiesController(IMediator mediator) 
-        //{
-        //    _mediator = mediator;
-        //}
+       
 
         [HttpGet] //api/activities
 
-        public async Task<ActionResult<List<Activity>>> GetActivities()
+        public async Task<IActionResult> GetActivities()
         {
            
             return HandleResult(await Mediator.Send(new List.Query()));
@@ -37,9 +24,9 @@ namespace API.Controllers
         
         [HttpGet("{id}")] //api/activities/fdfkdff
 
-        public async Task<ActionResult<Activity>> GetActivity(Guid id)
+        public async Task<IActionResult> GetActivity(Guid id)
         {
-            //return await _context.Activities.FindAsync(id);
+            
             
             return HandleResult(await Mediator.Send(new Details.Query { Id = id }));
 
@@ -53,6 +40,8 @@ namespace API.Controllers
             return HandleResult(await Mediator.Send(new Create.Command { Activity = activity }));
 
         }
+
+        [Authorize(Policy = "IsActivityHost")]
         [HttpPut ("{id}")]
         
         public async Task<IActionResult> EditActivity(Guid id, Activity activity)
@@ -62,11 +51,20 @@ namespace API.Controllers
 
             return HandleResult(await Mediator.Send(new Edit.Command { Activity = activity }));
         }
+
+        [Authorize(Policy = "IsActivityHost")]
         [HttpDelete("{Id}")]
         public async Task<IActionResult> DeleteActivity(Guid id) 
         {
             
             return HandleResult(await Mediator.Send(new Delete.Command { Id = id }));
+        }
+
+        [HttpPost("{id}/attend")]
+
+        public async Task<IActionResult> Attend(Guid id)
+        {
+            return HandleResult(await Mediator.Send(new UpdateAttendance.Command { Id = id }));
         }
     }
 }
