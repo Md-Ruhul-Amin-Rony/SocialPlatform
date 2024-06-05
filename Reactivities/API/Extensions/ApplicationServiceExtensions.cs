@@ -3,6 +3,7 @@ using Application.Core;
 using Application.Interfaces;
 using FluentValidation;
 using FluentValidation.AspNetCore;
+using Infrastructure.Photos;
 using Infrastructure.Security;
 using Microsoft.EntityFrameworkCore;
 using Persistence;
@@ -19,17 +20,7 @@ namespace API.Extensions
             services.AddAuthorization();
             services.AddDbContext<DataContext>(options => options.UseSqlServer(
                        config.GetConnectionString("DefaultConnection")));
-            //builder.Services.AddDbContext<DataContext>(opt =>
-            //{
-            //    opt.UseSqlite(builder.Configuration.GetConnectionString("DefaultConnection"));
-            //});
-            //builder.Services.AddCors(opt=>
-            //{
-            //        opt.AddPolicy( "CorsPolicy", policy =>
-            //        {
-            //            policy.AllowAnyHeader().AllowAnyMethod().WithOrigins("http://localhost:3000");
-            //        });
-            //});
+            
 
             services.AddCors(options =>
             {
@@ -44,6 +35,10 @@ namespace API.Extensions
             services.AddValidatorsFromAssemblyContaining<Create>();
             services.AddHttpContextAccessor();
             services.AddScoped<IUserAccessor, UserAccessor>();
+            services.AddScoped<IPhotoAccessor, PhotoAccessor>();
+            services.Configure<CloudinarySettings>(config.GetSection("Cloudinary"));
+
+
             return services;
 
         }
