@@ -20,14 +20,19 @@ namespace API.Extensions
             services.AddAuthorization();
             services.AddDbContext<DataContext>(options => options.UseSqlServer(
                        config.GetConnectionString("DefaultConnection")));
-            
+
 
             services.AddCors(options =>
             {
                 options.AddPolicy("CorsPolicy",
-                    builder => builder.AllowAnyOrigin()
+                    policy => 
+                    { policy
                         .AllowAnyMethod()
-                        .AllowAnyHeader());
+                        .AllowAnyHeader()
+                        .AllowCredentials()
+                        .WithOrigins("http://localhost:3000");
+                        });
+                        
             });
             services.AddMediatR(cfg => cfg.RegisterServicesFromAssembly(typeof(List.Handler).Assembly));
             services.AddAutoMapper(typeof(MappingProfiles).Assembly);
